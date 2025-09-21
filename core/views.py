@@ -6,7 +6,7 @@ import git
 @csrf_exempt
 def update(request):
     if request.method == "POST":
-        repo = git.Repo('/home/jhowjhow/Final_project_social_back')
+        repo = git.Repo('/home/Jhowjhow/Final_project_social_back')
         origin = repo.remotes.origin
         origin.pull()
         return HttpResponse("Servidor atualizado com sucesso!")
