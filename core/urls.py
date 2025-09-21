@@ -20,7 +20,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 from django.conf import settings
 from django.conf.urls.static import static
 
-from backend.core import views
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
