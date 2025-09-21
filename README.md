@@ -2,7 +2,7 @@
 
 Esta é a API RESTful para o projeto de Rede Social, desenvolvida com Python, Django e Django Rest Framework.
 
-**[Acesse a API online aqui](https://jhowbrows.pythonanywhere.com/)**
+**[Acesse a API online aqui](https://Jhowjhow.pythonanywhere.com/)**
 
 ---
 
