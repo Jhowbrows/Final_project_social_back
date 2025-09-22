@@ -81,3 +81,35 @@ class FollowSystemTests(APITestCase):
         self.assertEqual(len(response.data['followers']), 1)
         self.assertEqual(response.data['followers'][0]['username'], 'user1')
         self.assertEqual(len(response.data['following']), 0)
+
+
+class ProfileInteractionTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="testuser", password="old_password")
+        self.client.force_authenticate(user=self.user)
+
+    def test_change_password_successfully(self):
+        """
+        Garante que o utilizador pode alterar a sua senha com as credenciais corretas.
+        """
+        data = {
+            "old_password": "old_password",
+            "new_password": "new_secure_password"
+        }
+        response = self.client.post("/api/users/me/change-password/", data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Verifica se a nova senha funciona
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password("new_secure_password"))
+
+    def test_change_password_with_wrong_old_password(self):
+        """
+        Garante que a alteração de senha falha se a senha antiga estiver incorreta.
+        """
+        data = {
+            "old_password": "wrong_password",
+            "new_password": "new_password"
+        }
+        response = self.client.post("/api/users/me/change-password/", data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

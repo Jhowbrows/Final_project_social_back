@@ -2,7 +2,8 @@ from rest_framework import generics, viewsets, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, RegisterSerializer, PublicProfileSerializer
+from .serializers import UserSerializer, RegisterSerializer, PublicProfileSerializer, ChangePasswordSerializer
+
 from rest_framework.decorators import action
 
 class RegisterView(generics.CreateAPIView):
@@ -13,13 +14,43 @@ class RegisterView(generics.CreateAPIView):
 class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
-    def get_queryset(self): return User.objects.filter(id=self.request.user.id)
-    def get_object(self): return self.request.user
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)
+
+    def get_object(self):
+        return self.request.user
+
+    # MÉTODO ADICIONADO PARA CORRIGIR O ERRO
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
-    def list(self, request, *args, **kwargs): return Response(self.get_serializer(self.request.user).data)
-    def destroy(self, request, *args, **kwargs): return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def list(self, request, *args, **kwargs):
+        # Para retornar um único objeto em vez de uma lista
+        return Response(self.get_serializer(self.request.user).data)
+
+    def destroy(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    @action(detail=False, methods=['post'], url_path='change-password')
+    def set_password(self, request):
+        user = request.user
+        serializer = ChangePasswordSerializer(data=request.data)
+
+        if serializer.is_valid():
+            old_password = serializer.validated_data['old_password']
+            if not user.check_password(old_password):
+                return Response({"old_password": ["Senha antiga incorreta."]}, status=status.HTTP_400_BAD_REQUEST)
+
+            new_password = serializer.validated_data['new_password']
+            user.set_password(new_password)
+            user.save()
+            return Response({"status": "Senha alterada com sucesso"}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
