@@ -3,9 +3,38 @@ from django.contrib.auth.models import User
 from .models import Profile
 
 class PublicProfileSerializer(serializers.ModelSerializer):
+    profile_picture = serializers.ImageField(source='profile.profile_picture', read_only=True)
+    followers_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
+    
+    
+    followers = serializers.SerializerMethodField()
+    following = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ['id', 'username']
+        fields = [
+            'id', 'username', 'first_name', 'last_name', 
+            'profile_picture', 'followers_count', 'following_count',
+            'followers', 'following' 
+        ]
+
+    def get_followers_count(self, obj):
+        return obj.followers.count()
+
+    def get_following_count(self, obj):
+        return obj.profile.following.count()
+
+    
+    def get_followers(self, obj):
+        
+        follower_users = [profile.user for profile in obj.followers.all()]
+        return [{'id': user.id, 'username': user.username} for user in follower_users]
+
+    def get_following(self, obj):
+        
+        following_users = obj.profile.following.all()
+        return [{'id': user.id, 'username': user.username} for user in following_users]
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,15 +43,13 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
-
-    
+    profile_picture = serializers.ImageField(source='profile.profile_picture', read_only=True)
     followers = serializers.SerializerMethodField() 
-
     following = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'profile', 'followers', 'following']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'profile', 'profile_picture','followers', 'following']
         read_only_fields = ['id', 'followers', 'following']
 
     def get_following(self, obj):
@@ -56,3 +83,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             last_name=validated_data.get('last_name', ''),
             email=validated_data.get('email', '')
         )
+    
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
