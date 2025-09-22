@@ -14,7 +14,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
-
+    profile_picture = serializers.ImageField(source='profile.profile_picture', read_only=True)
     
     followers = serializers.SerializerMethodField() 
 
@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'profile', 'followers', 'following']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'profile', 'profile_picture','followers', 'following']
         read_only_fields = ['id', 'followers', 'following']
 
     def get_following(self, obj):
