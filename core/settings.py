@@ -12,9 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dummy-key-for-ci-tests')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['Jhowjhow.pythonanywhere.com','localhost', '127.0.0.1','https://socialhub-henna.vercel.app/login']
+ALLOWED_HOSTS = ['Jhowjhow.pythonanywhere.com','localhost', '127.0.0.1']
 
 
 # Application definition
@@ -126,7 +126,4 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
     }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    'https://socialhub-henna.vercel.app',
-]
+CORS_ALLOW_ALL_ORIGINS = True
