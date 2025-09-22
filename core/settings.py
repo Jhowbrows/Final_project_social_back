@@ -126,4 +126,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
     }
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://socialhub-henna.vercel.app",
+    "http://localhost:3000",
+]
