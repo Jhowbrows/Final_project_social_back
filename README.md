@@ -61,7 +61,7 @@ Este servidor está configurado com um webhook para **Implantação Contínua (C
 
 A API inclui endpoints para:
 * **Autenticação:** Registo (`/register/`) e Login (`/login/`).
-* **Perfis:** Ver e atualizar o perfil do utilizador (`/users/me/`), alterar a senha e a foto de perfil.
-* **Sistema Social:** Listar utilizadores (`/users/`), seguir e deixar de seguir.
+* **Perfis:** Ver e atualizar o perfil do utilizador (`/users/me/`), alterar a senha, nome de usuario e a foto de perfil.
+* **Sistema Social:** Listar seguidores (`/users/`), seguir e deixar de seguir.
 * **Posts:** Criar posts (`/posts/`), curtir e comentar.
-* **Feed:** Obter um feed personalizado com os posts dos utilizadores seguidos (`/feed/`).
+* **Feed:** Obter um feed personalizado com os posts dos usuarios seguidos (`/feed/`).
