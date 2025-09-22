@@ -33,6 +33,28 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+
+    @action(detail=False, methods=['post'], url_path='delete-picture')
+    def delete_picture(self, request):
+        """
+        Ação para apagar a foto de perfil do utilizador.
+        """
+        user = request.user
+        profile = user.profile
+
+        if not profile.profile_picture:
+            return Response({"status": "Nenhuma foto de perfil para apagar."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Apaga o ficheiro do armazenamento
+        profile.profile_picture.delete(save=False)
+        
+        # Limpa o campo no banco de dados e guarda
+        profile.profile_picture = None
+        profile.save()
+
+        return Response({"status": "Foto de perfil apagada com sucesso."}, status=status.HTTP_200_OK)
+
 
     @action(detail=False, methods=['post'], url_path='change-password')
     def set_password(self, request):
