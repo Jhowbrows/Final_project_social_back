@@ -16,19 +16,20 @@ class ProfileViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return User.objects.filter(id=self.request.user.id)
+        # CORREÇÃO: Usar select_related para garantir que o perfil é carregado
+        return User.objects.select_related('profile').filter(id=self.request.user.id)
 
     def get_object(self):
-        return self.request.user
+        # Usar o queryset já otimizado para obter o objeto
+        return self.get_queryset().get()
 
-    # MÉTODO ADICIONADO PARA CORRIGIR O ERRO
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
         # Para retornar um único objeto em vez de uma lista
-        return Response(self.get_serializer(self.request.user).data)
+        return Response(self.get_serializer(self.get_object()).data)
 
     def destroy(self, request, *args, **kwargs):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
