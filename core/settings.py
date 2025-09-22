@@ -12,9 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dummy-key-for-ci-tests')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['Jhowjhow.pythonanywhere.com', '127.0.0.1', 'localhost', 'https://socialhub-henna.vercel.app/']
+ALLOWED_HOSTS = ['Jhowjhow.pythonanywhere.com','https://socialhub-henna.vercel.app']
 
 
 # Application definition
