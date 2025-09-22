@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-=pz^wp+-qwrbo0xasgsq9hxrd&l+hbssrn%pv=i)6&6rkqqpp)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['Jhowjhow.pythonanywhere.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['Jhowjhow.pythonanywhere.com', '127.0.0.1', 'localhost', 'https://socialhub-henna.vercel.app/']
 
 
 # Application definition
@@ -127,4 +127,5 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    'https://socialhub-henna.vercel.app/',
 ]
