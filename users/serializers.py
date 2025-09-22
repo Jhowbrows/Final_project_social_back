@@ -49,8 +49,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'profile', 'profile_picture','followers', 'following']
-        read_only_fields = ['id', 'followers', 'following']
+        fields = ['id', 'first_name', 'last_name', 'email', 'profile', 'profile_picture','followers', 'following']
+        read_only_fields = ['id', 'username', 'followers', 'following']
 
     def get_following(self, obj):
        
@@ -68,6 +68,12 @@ class UserSerializer(serializers.ModelSerializer):
             profile_serializer = ProfileSerializer(instance.profile, data=profile_data, partial=True)
             if profile_serializer.is_valid(raise_exception=True):
                 profile_serializer.save()
+
+
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.save()        
 
         return super().update(instance, validated_data)
 
@@ -88,3 +94,15 @@ class RegisterSerializer(serializers.ModelSerializer):
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+
+
+
+class ChangeUsernameSerializer(serializers.Serializer):
+    password = serializers.CharField(required=True)
+    new_username = serializers.CharField(required=True)
+
+    def validate_new_username(self, value):
+        if User.objects.filter(username__iexact=value).exists():
+            raise serializers.ValidationError("Este nome de utilizador já está em uso.")
+        return value

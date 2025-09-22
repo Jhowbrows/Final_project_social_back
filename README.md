@@ -1,17 +1,28 @@
 # Social Network API - Back-end
 
-Esta é a API RESTful para o projeto de Rede Social, desenvolvida com Python, Django e Django Rest Framework.
+Esta é a API RESTful para o projeto de Rede Social, desenvolvida com Python, Django e Django Rest Framework. Ela serve como a base para todas as funcionalidades da aplicação.
 
-**[Acesse a API online aqui](https://jhowjhow.pythonanywhere.com/)**
+**API em Produção:** [https://jhowjhow.pythonanywhere.com/](https://jhowjhow.pythonanywhere.com/)
 
 ---
 
-## Como Rodar o Projeto Localmente
+## Como Usar
 
+Existem duas maneiras de executar este projeto: localmente para desenvolvimento ou acedendo ao servidor de produção.
+
+### 1. Executar Localmente
+
+Siga os passos abaixo para configurar e executar o projeto no seu ambiente de desenvolvimento.
+
+**Pré-requisitos:**
+* Python 3.10+
+* Git
+
+**Passos:**
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/Jhowbrows/Final_project_social_back.git]
-    cd Final_project_social_back
+    git clone [https://github.com/Jhowbrows/final_project_social_back.git]
+    cd final_project_social_back
     ```
 
 2.  **Crie e ative um ambiente virtual:**
@@ -37,24 +48,20 @@ Esta é a API RESTful para o projeto de Rede Social, desenvolvida com Python, Dj
     ```
     A API estará acessível em `http://127.0.0.1:8000/`.
 
+### 2. Usar o Servidor de Produção (PythonAnywhere)
+
+A API já está com deploy e acessível publicamente no PythonAnywhere. O front-end da aplicação deve ser configurado para fazer pedidos para o seguinte URL base:
+`https://jhowjhow.pythonanywhere.com/api/`
+
+Este servidor está configurado com um webhook para **Implantação Contínua (Continuous Deployment)**. Qualquer `push` para a branch `main` irá acionar uma atualização automática do servidor.
+
 ---
 
 ## Documentação da API
 
-### Autenticação
-* `POST /api/users/register/` - Cadastro de novo utilizador.
-* `POST /api/login/` - Login, retorna o token de autenticação.
-
-### Perfis e Utilizadores
-* `GET /api/users/me/` - Exibe os detalhes do perfil do utilizador logado.
-* `PATCH /api/users/me/` - Atualiza o perfil (nome, foto).
-* `POST /api/users/me/change-password/` - **(NOVO)** Altera a senha do utilizador. Requer `old_password` e `new_password`.
-* `GET /api/users/` - Lista todos os utilizadores.
-* `POST /api/users/{id}/follow/` - Seguir um utilizador.
-* `POST /api/users/{id}/unfollow/` - Deixar de seguir um utilizador.
-
-### Postagens e Feed
-* `POST /api/posts/` - Criar um novo post.
-* `GET /api/feed/` - Aceder ao feed de notícias personalizado.
-* `POST /api/posts/{id}/like/` - Curtir ou descurtir um post.
-* `POST /api/posts/{id}/comment/` - Adicionar um comentário a um post.
+A API inclui endpoints para:
+* **Autenticação:** Registo (`/register/`) e Login (`/login/`).
+* **Perfis:** Ver e atualizar o perfil do utilizador (`/users/me/`), alterar a senha e a foto de perfil.
+* **Sistema Social:** Listar utilizadores (`/users/`), seguir e deixar de seguir.
+* **Posts:** Criar posts (`/posts/`), curtir e comentar.
+* **Feed:** Obter um feed personalizado com os posts dos utilizadores seguidos (`/feed/`).

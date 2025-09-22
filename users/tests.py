@@ -87,21 +87,45 @@ class ProfileInteractionTests(APITestCase):
     
     def test_delete_profile_picture(self):
         """
-        Garante que o utilizador pode apagar a sua foto de perfil.
+        Garante que o usuario pode apagar a sua foto de perfil.
         """
-        # Primeiro, fazemos o upload de uma imagem
+        
         tmp_file = self._create_temp_image()
         self.user.profile.profile_picture = SimpleUploadedFile(tmp_file.name, tmp_file.read())
         self.user.profile.save()
 
-        # Verificamos se a imagem existe
+        
         self.user.profile.refresh_from_db()
         self.assertTrue(self.user.profile.profile_picture)
 
-        # Agora, chamamos o endpoint para apagar
+        
         response = self.client.post("/api/users/me/delete-picture/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # Verificamos se a imagem foi removida do perfil
+        
         self.user.profile.refresh_from_db()
         self.assertFalse(self.user.profile.profile_picture)
+
+
+    def test_change_username_successfully(self):
+        """
+        Garante que o usuario pode alterar o seu nome de utilizador com a senha correta.
+        """
+        data = {
+            "password": "old_password",
+            "new_username": "new_test_user"
+        }
+        response = self.client.post("/api/users/me/change-username/", data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.username, "new_test_user")
+    
+    def test_update_email(self):
+        """
+        Garante que o usuario pode atualizar o seu email através de um PATCH.
+        """
+        data = {"email": "new.email@example.com"}
+        response = self.client.patch("/api/users/me/", data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, "new.email@example.com")
