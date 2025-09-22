@@ -4,30 +4,33 @@ from .views import RegisterView, ProfileViewSet, UserViewSet
 
 
 profile_view = ProfileViewSet.as_view({
-    'get': 'list',      # GET /api/users/me/ -> list (ver perfil)
-    'patch': 'partial_update' # PATCH /api/users/me/ -> partial_update (atualizar perfil)
+    'get': 'list',      
+    'patch': 'partial_update' 
 })
 
 password_view = ProfileViewSet.as_view({
-    'post': 'set_password' # POST /api/users/me/change-password/ -> set_password
+    'post': 'set_password' 
 })
 
 delete_picture_view = ProfileViewSet.as_view({
     'post': 'delete_picture'
 })
 
-# O router continua a ser usado para a UserViewSet (listar e seguir utilizadores)
+change_username_view = ProfileViewSet.as_view({
+    'post': 'set_username'
+})
+
+
 router = DefaultRouter()
 router.register(r'', UserViewSet, basename='user')
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
 
-    # NOVAS ROTAS MANUAIS
+
     path('me/', profile_view, name='my-profile'),
     path('me/change-password/', password_view, name='change-password'),
     path('me/delete-picture/', delete_picture_view, name='delete-picture'),
-
-    # A rota do router vem no final
+    path('me/change-username/', change_username_view, name='change-username'),
     path('', include(router.urls)),
 ]
